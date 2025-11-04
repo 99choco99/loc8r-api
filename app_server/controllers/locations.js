@@ -4,7 +4,7 @@ const apiOptions = {
   server: 'http://localhost:3000'
 };
 if(process.env.NODE_ENV === 'production'){
-  apiOptions.server = 'https://api.com'
+  apiOptions.server = 'https://loc8r-api-indo.onrender.com'
 }
 
 const requestOptions = {
