@@ -1,8 +1,11 @@
 var request = require('request');
 
 const apiOptions = {
-  server: process.env.API_URL || 'http://localhost:3000'
+  server: 'http://localhost:3000'
 };
+if(process.env.NODE_ENV === 'production'){
+  apiOptions.server = 'https://loc8r-api-indo.onrender.com'
+}
 
 const requestOptions = {
   url: `${apiOptions.server}`,

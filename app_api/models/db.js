@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var gracefulShutdown;
 
 const dbPassword = process.env.MONGODB_PASSWORD;
-var dbURI = `mongodb+srv://99choco990:${dbPassword}@tacocloud.sp9avhb.mongodb.net/Loc8r`;
+var dbURI = `mongodb+srv://99choco990:qhdks12!!@tacocloud.sp9avhb.mongodb.net/Loc8r`;
 mongoose.connect(dbURI);
 
 mongoose.connection.on('connected', function () {
