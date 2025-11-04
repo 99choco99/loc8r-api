@@ -3,7 +3,7 @@ var request = require('request');
 const apiOptions = {
   server: 'http://localhost:3000'
 };
-if(process.env.NODE_ENV === 'production'){
+if(process.env.NODE_ENV === 'development'){
   apiOptions.server = 'https://loc8r-api-indo.onrender.com'
 }
 
@@ -15,15 +15,6 @@ const requestOptions = {
     offset: 20
   }
 };
-request(requestOptions,(err,response, body) =>{
-  if(err){
-    console.log(err);
-  }if(response.statusCode === 200){
-    console.log(body);
-  }else{
-    console.log(response.statusCode);
-  }
-});
 
 /*      
       lng: 1,
