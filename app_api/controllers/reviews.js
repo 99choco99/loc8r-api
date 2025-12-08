@@ -1,11 +1,30 @@
 const mongoose = require('mongoose');
 const Loc = mongoose.model('Location');
+const User = mongoose.model('User');
+
+
+const getAuthor = async (req, res, callback) => {
+  if (req.auth && req.auth.email) {
+    try {
+      const user = await User.findOne({ email: req.auth.email }).exec();
+      if (!user) {
+        return res.status(404).json({ "message": "User not found" });
+      }
+      callback(req, res, user.name);
+    } catch (err) {
+      console.log(err);
+      return res.status(404).json(err);
+    }
+  } else {
+    return res.status(404).json({ "message": "User not found" });
+  }
+};
 
 
 const doSetAverageRating = async (location) => {
   if (location.reviews && location.reviews.length > 0) {
     const count = location.reviews.length;
-    const total = location.reviews.reduce((acc, {rating}) => {
+    const total = location.reviews.reduce((acc, { rating }) => {
       return acc + rating;
     }, 0);
 
@@ -30,13 +49,18 @@ const updateAverageRating = async (locationId) => {
   }
 };
 
-const doAddReview = async (req, res, location) => {
+const doAddReview = async (req, res, location, author) => {
   if (!location) {
     return res.status(404).json({ "message": "Location not found" });
   }
 
-  const { author, rating, reviewText } = req.body;
-  location.reviews.push({ author, rating, reviewText });
+  const { rating, reviewText } = req.body;
+
+  location.reviews.push({
+    author, 
+    rating,
+    reviewText
+  });
 
   try {
     const updatedLocation = await location.save();
@@ -48,24 +72,21 @@ const doAddReview = async (req, res, location) => {
   }
 };
 
-const reviewsCreate = async (req, res) => {
+const reviewsCreate = (req, res) => {
   const locationId = req.params.locationid;
-  if (!locationId) {
-    return res.status(404).json({ "message": "Location not found" });
-  }
-
-  try {
-    const location = await Loc.findById(locationId).select('reviews').exec();
-    if (location) {
-      await doAddReview(req, res, location);
-    } else {
-      return res.status(404).json({ "message": "Location not found" });
-    }
-  } catch (err) {
-    return res.status(400).json(err);
+  if (locationId) {
+    getAuthor(req, res, async (req, res, userName) => {
+      try {
+        const location = await Loc.findById(locationId).select('reviews').exec();
+        await doAddReview(req, res, location, userName);
+      } catch (err) {
+        return res.status(400).json(err);
+      }
+    });
+  } else {
+    res.status(404).json({ "message": "Location not found" });
   }
 };
-
 const reviewsReadOne = async (req, res) => {
   try {
     const location = await Loc.findById(req.params.locationid).select('name reviews').exec();

@@ -23,21 +23,21 @@ gracefulShutdown = function (msg, callback) {
   });
 };
 
-// For nodemon restarts
+//2020810013 김승혁
 process.once('SIGUSR2', function () {
   gracefulShutdown('nodemon restart', function () {
     process.kill(process.pid, 'SIGUSR2');
   });
 });
 
-// For app termination
+//2020810013 김승혁
 process.on('SIGINT', function() {
   gracefulShutdown('app termination', function () {
     process.exit(0);
   });
 });
 
-// For Heroku app termination
+//2020810013 김승혁
 process.on('SIGTERM', function() {
   gracefulShutdown('Heroku app shutdown', function () {
     process.exit(0);
@@ -45,3 +45,4 @@ process.on('SIGTERM', function() {
 });
 
 require('./locations'); 
+require('./users');

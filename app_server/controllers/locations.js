@@ -3,7 +3,7 @@ var request = require('request');
 const apiOptions = {
   server: 'http://localhost:3000'
 };
-if(process.env.NODE_ENV === 'development'){
+if(process.env.NODE_ENV === 'developments'){
   apiOptions.server = 'https://loc8r-api-indo.onrender.com'
 }
 
